@@ -1,0 +1,87 @@
+#!/bin/sh
+
+PLATFORM=`uname -s`
+
+help() {
+    echo "syntax:   list | install"
+    return 0
+}
+
+list_installed_rules () {
+    ls "$PACKAGES_PATH" | sed -e "s/\.sh//g"
+    return 0
+}
+
+get_pkg_basename ()
+{
+    pkg_name="$1"
+    pkg_target=`ls "$PACKAGES_PATH" | grep "$pkg_name"`
+    if [ ! -n "$pkg_target" ]; then
+        echo "$pkg_name not found."
+        return 1;
+    fi
+    return 0;
+}
+
+load_target_package()
+{
+    pkg_name="$1"
+    if [ ! -n "$pkg_name" ]; then
+        return 1
+    fi
+    get_pkg_basename $pkg_name 
+    r=$?
+    [ $r -ne 0 ] && return $r
+
+    target_pathname="$PACKAGES_PATH/$pkg_target"
+    . $target_pathname
+    return 0;
+}
+
+install_package()
+{
+    load_target_package $1
+    r=$?
+    [ $r -ne 0 ] && return $r
+    install
+    return $?
+}
+
+uninstall_package()
+{
+    load_target_package $1
+    r=$?
+    [ $r -ne 0 ] && return $r
+    uninstall 
+    return $?
+}
+
+# main
+if [ ! "$PLATFORM" = "Linux" ]; then
+    echo "This platform ($PLATFORM) is unsupported by july-get."
+    exit 1
+fi
+
+PACKAGES_PATH="$HOME/julu-get/packages/$PLATFORM/"
+cmd="$1"
+
+case $cmd in
+l*)
+    list_installed_rules
+    ret=$?
+;;
+i*)
+    install_package "$2"
+    ret=$?
+    ;;
+u*)
+    uninstall_package "$2"
+    ret=$?
+    ;;
+*)
+    help
+    ret=$?
+;;
+esac
+
+exit $ret

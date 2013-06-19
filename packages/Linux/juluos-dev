@@ -1,0 +1,10 @@
+
+install() {
+    echo "call install $0"
+    return 0;
+}
+
+uninstall() {
+    echo "call uninstall $0"
+    return 0;
+}
