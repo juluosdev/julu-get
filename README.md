@@ -5,9 +5,9 @@ Script for quick setup development environment of Debian ARM
 (This is draft version julu-get.)
 
 ## install
-
+* use curl with shell
     ```
-    curl https://github.com/juluosdev/julu-get/blob/master/install.sh | sh -
+    curl https://raw.github.com/juluosdev/julu-get/master/install.sh | sh -
     ```
 
 ## how to use
@@ -23,5 +23,5 @@ Script for quick setup development environment of Debian ARM
 
 * Unstall specific package by name
     ```
-    $ ~/julu-get/bin/julu-get install <pkg_name>
+    $ ~/julu-get/bin/julu-get uninstall <pkg_name>
     ```
