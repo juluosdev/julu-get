@@ -1,10 +1,21 @@
 
 install() {
     echo "call install $0"
-    return 0;
+    # https://help.ubuntu.com/community/CheckingYourUbuntuVersion
+    code_name="$(lsb_release -c | sed -e 's/^[A-Za-z]*:[\t ]*\([a-z]\)/\1/g')"
+    case $code_name in
+    onieric|precise|quantal)
+    # https://wiki.linaro.org/Platform/DevPlatform/CrossCompile/CrossbuildingQuickStart
+    echo "===>>> installing juluos-dev: cross toolchain for both armel and armhf"
+    sudo apt-get install g++-arm-linux-gnueabi
+    ret=$?
+    ;;
+    esac
+
+    return $ret;
 }
 
 uninstall() {
-    echo "call uninstall $0"
+    echo "uninstall $0 is unsupported yet."
     return 0;
 }
