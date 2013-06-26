@@ -1,17 +1,40 @@
+desc_install() {
+    echo "===>>> installing juluos-dev: $1"
+}
 
 install() {
     echo "call install $0"
     # https://help.ubuntu.com/community/CheckingYourUbuntuVersion
     code_name="$(lsb_release -c | sed -e 's/^[A-Za-z]*:[\t ]*\([a-z]\)/\1/g')"
-    case $code_name in
-    onieric|precise|quantal)
+
     # https://wiki.linaro.org/Platform/DevPlatform/CrossCompile/CrossbuildingQuickStart
-    echo "===>>> installing juluos-dev: cross toolchain for both armel and armhf"
+    case $code_name in
+    raring)
+    desc_install "cross toolchain for armhf supported"
+    sudo apt-get install crossbuild-essential-armhf
+    ret=$?
+    ;;
+    onieric)
+    desc_install "cross toolchain for only armel and armhf supported"
+    sudo apt-get install g++-arm-linux-gnueabi arm-linux-gnueabi-pkgconfig
+    ret=$?
+    ;;
+    precise|quantal)
+    desc_install "cross toolchain for only armel and armhf supported"
     sudo apt-get install g++-arm-linux-gnueabi
     ret=$?
     ;;
+    natty)
+    desc_install "cross toolchain for only armel supported"
+    sudo apt-get install g++-4.5-arm-linux-gnueabi libc6-dev-armel-cross
+    ret=$?
+    ;;
+    maverick)
+    desc_install "cross toolchain for only armel supported"
+    sudo apt-get install install g++-4.4-arm-linux-gnueabi libc6-dev-armel-cross
+    ret=$?
+    ;;
     esac
-
     return $ret;
 }
 
